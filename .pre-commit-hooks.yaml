@@ -1,0 +1,16 @@
+- id: gitlab-ci-component-linter
+  name: GitLab CI Component Linter
+  description: Lint GitLab CI component repository project
+  entry: gitlab-ci-component-linter
+  language: system
+  always_run: true
+  pass_filenames: false
+  args:
+    - "."
+- id: gitlab-ci-component-linter-docker
+  name: GitLab CI Component Linter with docker container
+  description: Lint GitLab CI component repository project with docker container
+  entry: ghcr.io/sapher/gitlab-ci-component-linter:latest gitlab-ci-component-linter .
+  language: docker_image
+  always_run: true
+  pass_filenames: false
