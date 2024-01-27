@@ -8,6 +8,31 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type JunitTestCaseFailure struct {
+	Message string `xml:",chardata"`
+}
+
+type JunitTestCase struct {
+	Name    string                 `xml:"name,attr"`
+	Failure []JunitTestCaseFailure `xml:"failure,omitempty"`
+}
+
+type JunitTestSuite struct {
+	Testcases []JunitTestCase `xml:"testcase"`
+	Name      string          `xml:"name,attr"`
+	Id        int             `xml:"id,attr"`
+	Disabled  int             `xml:"disabled,attr"`
+	Skipped   int             `xml:"skipped,attr"`
+	Errors    int             `xml:"errors,attr"`
+	Failures  int             `xml:"failures,attr"`
+	Tests     int             `xml:"tests,attr"`
+}
+
+type JunitTestSuites struct {
+	XMLName    xml.Name         `xml:"testsuites"`
+	TestSuites []JunitTestSuite `xml:"testsuite"`
+}
+
 type LinterOutput string
 
 const (
@@ -60,31 +85,6 @@ func (l *LinterResults) ToYaml() (string, error) {
 		return "", err
 	}
 	return string(output), nil
-}
-
-type JunitTestCaseFailure struct {
-	Message string `xml:",chardata"`
-}
-
-type JunitTestCase struct {
-	Name    string                 `xml:"name,attr"`
-	Failure []JunitTestCaseFailure `xml:"failure,omitempty"`
-}
-
-type JunitTestSuite struct {
-	Testcases []JunitTestCase `xml:"testcase"`
-	Name      string          `xml:"name,attr"`
-	Id        int             `xml:"id,attr"`
-	Disabled  int             `xml:"disabled,attr"`
-	Skipped   int             `xml:"skipped,attr"`
-	Errors    int             `xml:"errors,attr"`
-	Failures  int             `xml:"failures,attr"`
-	Tests     int             `xml:"tests,attr"`
-}
-
-type JunitTestSuites struct {
-	XMLName    xml.Name         `xml:"testsuites"`
-	TestSuites []JunitTestSuite `xml:"testsuite"`
 }
 
 func (l *LinterResults) ToJunitReport() (string, error) {

@@ -6,3 +6,6 @@ clean:
 
 run:
 	go run ./cmd/main.go --workdir /home/sapher/projects/fleurimont/devops/ci-cd-catalog/nodejs
+
+test:
+	go test -v ./...
