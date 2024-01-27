@@ -96,7 +96,7 @@ Then you need to add it to the `ruleFuncs` array in `pkg/linter/rules.go`:
 
 ```go
 var ruleFuncs = []LinterRuleFunc{
-	# ... omitted
+	// ... omitted
   NewRule,
 }
 ```
