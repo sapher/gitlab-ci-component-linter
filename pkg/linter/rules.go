@@ -1,6 +1,7 @@
 package linter
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -14,11 +15,13 @@ func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
 		Name:     "missing-root-readme",
 		Success:  false,
 		Message:  "No README.md file found in root directory",
+		Metadata: map[string]interface{}{},
 		Severity: SeverityWarning,
 	}
 
 	// Check if README.md exists in root directory
 	filepath := path.Join(linter.Workdir, "README.md")
+	fmt.Println(filepath)
 	if !IsFileExist(filepath) {
 		return result, nil
 	}
@@ -32,6 +35,7 @@ func MissingRootTemplatesDirRUle(linter *Linter) (LinterResult, error) {
 		Name:     "missing-root-templates-dir",
 		Success:  false,
 		Message:  "No templates directory found in root directory",
+		Metadata: map[string]interface{}{},
 		Severity: SeverityError,
 	}
 
