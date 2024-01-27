@@ -1,13 +1,21 @@
 package linter
 
-import "os"
+import (
+	"os"
+)
 
 func IsFileExist(path string) bool {
 	stat, err := os.Stat(path)
-	return os.IsExist(err) && !stat.IsDir()
+	if err == nil {
+		return !stat.IsDir()
+	}
+	return false
 }
 
 func IsDirExist(path string) bool {
 	stat, err := os.Stat(path)
-	return os.IsExist(err) && stat.IsDir()
+	if err == nil {
+		return stat.IsDir()
+	}
+	return false
 }

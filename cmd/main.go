@@ -20,8 +20,10 @@ var rootCmd = &cobra.Command{
 		output, _ := cmdFlags.GetString("output")
 		newLinter := linter.New(workdir, linter.LinterOutput(output))
 
+		fmt.Println("workdir", workdir)
+
 		// Check workdir validity
-		if linter.IsDirExist(workdir) {
+		if !linter.IsDirExist(workdir) {
 			os.Stderr.WriteString(fmt.Sprintf("Workdir does not exist: %s", workdir))
 			os.Exit(1)
 		}

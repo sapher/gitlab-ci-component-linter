@@ -40,7 +40,7 @@ You can use this linter as git hook with `pre-commit` to validate your changes b
 ```yaml
 repos:
   - repo: https://github.com/sapher/gitlab-ci-component-linter
-    rev: v1.1.0
+    rev: v1.0.1
     hooks:
       - id: gitlab-ci-component-linter
 ```
@@ -59,9 +59,9 @@ lint:
   script:
     # Download binary
     - apk add --no-cache wget
-    - wget -q -O gitlab-ci-component-linter.zip  https://github.com/sapher/gitlab-ci-component-linter/releases/download/v1.0.0/gitlab-ci-component-linter_1.0.0_linux_amd64.zip
+    - wget -q -O gitlab-ci-component-linter.zip  https://github.com/sapher/gitlab-ci-component-linter/releases/download/v1.0.1/gitlab-ci-component-linter_1.0.1_linux_amd64.zip
     - unzip gitlab-ci-component-linter.zip
-    - mv gitlab-ci-component-linter_v1.0.0 /usr/local/bin/gitlab-ci-component-linter
+    - mv gitlab-ci-component-linter_v1.0.1 /usr/local/bin/gitlab-ci-component-linter
     # Run linter
     - gitlab-ci-component-linter $CI_PROJECT_DIR --output junit | tee junit.xml
   artifacts:
