@@ -1,0 +1,6 @@
+- id: gitlab-ci-component-linter
+  name: GitLab CI Component Linter
+  description: Lint GitLab CI component repository project
+  entry: gitlab-ci-component-linter
+  language: system
+  always_run: true
