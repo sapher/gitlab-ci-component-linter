@@ -10,6 +10,12 @@ import (
 
 type LinterRuleFunc func(linter *Linter) (LinterResult, error)
 
+var ruleFuncs = []LinterRuleFunc{
+	MissingRootReadmeRule,
+	MissingRootTemplatesDirRule,
+	WrongYamlFileExtensionRule,
+}
+
 func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
 	result := LinterResult{
 		Name:     "missing-root-readme",

@@ -68,3 +68,37 @@ lint:
     reports:
       junit: junit.xml
 ```
+
+## Contribute
+
+Feel free to open an issue or a pull request if you want to contribute.
+
+### Add new rule
+
+To add a new rule, you need to create a new function in `pkg/linter/rules.go` that implements the `type LinterRuleFunc func(linter *Linter) (LinterResult, error)` interface.
+
+Like for example:
+
+```go
+func NewRule(linter *Linter) (LinterResult, error) {
+	result := LinterResult{
+		Name:     "new-rule",
+		Success:  false,
+		Message:  "This is a new rule",
+		Metadata: map[string]interface{}{},
+		Severity: SeverityWarning,
+	}
+	return result, nil
+}
+```
+
+Then you need to add it to the `ruleFuncs` array in `pkg/linter/rules.go`:
+
+```go
+var ruleFuncs = []LinterRuleFunc{
+	# ... omitted
+  NewRule,
+}
+```
+
+Then you are good to go, you can run the linter and see your new rule in action.
