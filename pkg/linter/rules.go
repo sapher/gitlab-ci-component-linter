@@ -30,7 +30,7 @@ func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
 	return result, nil
 }
 
-func MissingRootTemplatesDirRUle(linter *Linter) (LinterResult, error) {
+func MissingRootTemplatesDirRule(linter *Linter) (LinterResult, error) {
 	result := LinterResult{
 		Name:     "missing-root-templates-dir",
 		Success:  false,
@@ -65,6 +65,8 @@ func WrongYamlFileExtensionRule(linter *Linter) (LinterResult, error) {
 		if err != nil {
 			return err
 		}
+
+		fmt.Println(path)
 
 		// Check if path is a file and has .yaml extension
 		if !info.IsDir() && strings.HasSuffix(strings.ToLower(path), ".yaml") {

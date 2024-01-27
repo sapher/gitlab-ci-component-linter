@@ -12,7 +12,7 @@ func New(workDir string, output LinterOutput) *Linter {
 		Output:  output,
 		Rules: []LinterRuleFunc{
 			MissingRootReadmeRule,
-			MissingRootTemplatesDirRUle,
+			MissingRootTemplatesDirRule,
 			WrongYamlFileExtensionRule,
 		},
 	}
