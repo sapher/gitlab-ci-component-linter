@@ -32,7 +32,7 @@ func MissingRootTemplatesDirRUle(linter *Linter) (LinterResult, error) {
 		Name:     "missing-root-templates-dir",
 		Success:  false,
 		Message:  "No templates directory found in root directory",
-		Severity: SeverityWarning,
+		Severity: SeverityError,
 	}
 
 	// Check if templates directory exists in root directory
