@@ -1,7 +1,6 @@
 package linter
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -27,7 +26,6 @@ func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
 
 	// Check if README.md exists in root directory
 	filepath := path.Join(linter.Workdir, "README.md")
-	fmt.Println(filepath)
 	if !IsFileExist(filepath) {
 		return result, nil
 	}
@@ -71,8 +69,6 @@ func WrongYamlFileExtensionRule(linter *Linter) (LinterResult, error) {
 		if err != nil {
 			return err
 		}
-
-		fmt.Println(path)
 
 		// Check if path is a file and has .yaml extension
 		if !info.IsDir() && strings.HasSuffix(strings.ToLower(path), ".yaml") {
