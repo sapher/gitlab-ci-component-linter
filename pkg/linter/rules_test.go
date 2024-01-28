@@ -8,6 +8,14 @@ import (
 	"testing"
 )
 
+func TestAllRulesReferenced(t *testing.T) {
+	t.Run("All rules are referenced", func(t *testing.T) {
+		if len(ruleFuncs) != len(jsonRules.Rules) {
+			t.Errorf("Expected %d rules, got %d", len(ruleFuncs), len(jsonRules.Rules))
+		}
+	})
+}
+
 func TestMissingRootReadmeRule(t *testing.T) {
 	t.Run("No README.md present", func(t *testing.T) {
 		tempDir, err := os.MkdirTemp("", "testdir")

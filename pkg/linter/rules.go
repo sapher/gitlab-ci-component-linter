@@ -1,12 +1,33 @@
 package linter
 
 import (
-	"fmt"
+	_ "embed"
+	"encoding/json"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 )
+
+type JsonRule struct {
+	Message  string `json:"message"`
+	Severity string `json:"severity"`
+}
+
+type JsonRuleMap struct {
+	Rules map[string]JsonRule `json:"rules"`
+}
+
+//go:embed rules.json
+var rawJsonRules string
+var jsonRules JsonRuleMap
+
+func init() {
+	err := json.Unmarshal([]byte(rawJsonRules), &jsonRules)
+	if err != nil {
+		panic(err)
+	}
+}
 
 type LinterRuleFunc func(linter *Linter) (LinterResult, error)
 
@@ -17,17 +38,18 @@ var ruleFuncs = []LinterRuleFunc{
 }
 
 func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
+	ruleName := "missing-root-readme"
+	yamlRule := jsonRules.Rules[ruleName]
 	result := LinterResult{
-		Name:     "missing-root-readme",
+		Name:     ruleName,
 		Success:  false,
-		Message:  "No README.md file found in root directory",
+		Message:  yamlRule.Message,
 		Metadata: map[string]interface{}{},
-		Severity: SeverityWarning,
+		Severity: RuleSeverity(yamlRule.Severity),
 	}
 
 	// Check if README.md exists in root directory
 	filepath := path.Join(linter.Workdir, "README.md")
-	fmt.Println(filepath)
 	if !IsFileExist(filepath) {
 		return result, nil
 	}
@@ -37,12 +59,14 @@ func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {
 }
 
 func MissingRootTemplatesDirRule(linter *Linter) (LinterResult, error) {
+	ruleName := "missing-root-templates-dir"
+	yamlRule := jsonRules.Rules[ruleName]
 	result := LinterResult{
-		Name:     "missing-root-templates-dir",
+		Name:     ruleName,
 		Success:  false,
-		Message:  "No templates directory found in root directory",
+		Message:  yamlRule.Message,
 		Metadata: map[string]interface{}{},
-		Severity: SeverityError,
+		Severity: RuleSeverity(yamlRule.Severity),
 	}
 
 	// Check if templates directory exists in root directory
@@ -56,14 +80,14 @@ func MissingRootTemplatesDirRule(linter *Linter) (LinterResult, error) {
 }
 
 func WrongYamlFileExtensionRule(linter *Linter) (LinterResult, error) {
+	ruleName := "wrong-yaml-file-extension"
+	yamlRule := jsonRules.Rules[ruleName]
 	result := LinterResult{
-		Name:    "wrong-yaml-file-extension",
-		Success: false,
-		Message: "YAML files must have .yml extension, not .yaml",
-		Metadata: map[string]interface{}{
-			"files": []string{},
-		},
-		Severity: SeverityError,
+		Name:     ruleName,
+		Success:  false,
+		Message:  yamlRule.Message,
+		Metadata: map[string]interface{}{},
+		Severity: RuleSeverity(yamlRule.Severity),
 	}
 
 	// Check if any files with .yaml extension exists in root directory and subdirectories
@@ -71,8 +95,6 @@ func WrongYamlFileExtensionRule(linter *Linter) (LinterResult, error) {
 		if err != nil {
 			return err
 		}
-
-		fmt.Println(path)
 
 		// Check if path is a file and has .yaml extension
 		if !info.IsDir() && strings.HasSuffix(strings.ToLower(path), ".yaml") {
