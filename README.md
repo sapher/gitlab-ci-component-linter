@@ -4,7 +4,7 @@
 
 Linter for Gitlab CI components. Validate that project follow the [guidelines](https://docs.gitlab.com/ee/ci/components/#directory-structure) defined by Giltab for CI components.
 
-> This loot name is not that great, if you have a better idea, please open an issue.
+> This tool name is not that great, if you have a better idea, please open an issue.
 
 ## Install
 
@@ -40,7 +40,7 @@ You can use this linter as git hook with `pre-commit` to validate your changes b
 ```yaml
 repos:
   - repo: https://github.com/sapher/gitlab-ci-component-linter
-    rev: v1.0.1
+    rev: v1.0.2
     hooks:
       - id: gitlab-ci-component-linter
 ```
@@ -59,9 +59,9 @@ lint:
   script:
     # Download binary
     - apk add --no-cache wget
-    - wget -q -O gitlab-ci-component-linter.zip  https://github.com/sapher/gitlab-ci-component-linter/releases/download/v1.0.1/gitlab-ci-component-linter_1.0.1_linux_amd64.zip
-    - unzip gitlab-ci-component-linter.zip
-    - mv gitlab-ci-component-linter_v1.0.1 /usr/local/bin/gitlab-ci-component-linter
+    - wget -q -O gitlab-ci-component-linter.zip  https://github.com/sapher/gitlab-ci-component-linter/releases/download/v1.0.2/gitlab-ci-component-linter_1.0.1_linux_amd64.zip
+    - unzip -n gitlab-ci-component-linter.zip
+    - mv gitlab-ci-component-linter_v1.0.2 /usr/local/bin/gitlab-ci-component-linter
     # Run linter
     - gitlab-ci-component-linter $CI_PROJECT_DIR --output junit | tee junit.xml
   artifacts:
@@ -96,7 +96,7 @@ Then you need to add it to the `ruleFuncs` array in `pkg/linter/rules.go`:
 
 ```go
 var ruleFuncs = []LinterRuleFunc{
-	// ... omitted
+  // ... omitted
   NewRule,
 }
 ```
