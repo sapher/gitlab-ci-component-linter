@@ -20,6 +20,16 @@ var rootCmd = &cobra.Command{
 		output, _ := cmdFlags.GetString("output")
 		newLinter := linter.New(workdir, linter.LinterOutput(output))
 
+		// Set workdir to current directory if not provided
+		if workdir == "" {
+			currentWorkDir, err := os.Getwd()
+			if err != nil {
+				os.Stderr.WriteString(err.Error())
+				os.Exit(1)
+			}
+			workdir = currentWorkDir
+		}
+
 		// Check workdir validity
 		if !linter.IsDirExist(workdir) {
 			os.Stderr.WriteString(fmt.Sprintf("Workdir does not exist: %s", workdir))
@@ -59,7 +69,7 @@ var rootCmd = &cobra.Command{
 func init() {
 	cobra.OnInitialize()
 
-	rootCmd.PersistentFlags().String("workdir", ".", "Working directory")
+	rootCmd.PersistentFlags().String("workdir", "", "Working directory")
 	rootCmd.PersistentFlags().Bool("soft-fail", false, "Wether to fail or not on error")
 	rootCmd.PersistentFlags().String("output", string(linter.OutputJson), "Output format, one of: json, yaml, junit")
 }
