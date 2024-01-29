@@ -13,12 +13,11 @@ var rootCmd = &cobra.Command{
 	Short: "Linter for Gitlab CI Component",
 	Long:  `Validate Gitlab CI Component files against set of rules`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Create new linter
+		// Get flags
 		cmdFlags := cmd.Flags()
 		workdir, _ := cmdFlags.GetString("workdir")
 		softFail, _ := cmdFlags.GetBool("soft-fail")
 		output, _ := cmdFlags.GetString("output")
-		newLinter := linter.New(workdir, linter.LinterOutput(output))
 
 		// Set workdir to current directory if not provided
 		if workdir == "" {
@@ -35,6 +34,9 @@ var rootCmd = &cobra.Command{
 			os.Stderr.WriteString(fmt.Sprintf("Workdir does not exist: %s", workdir))
 			os.Exit(1)
 		}
+
+		// Create new linter
+		newLinter := linter.New(workdir, linter.LinterOutput(output))
 
 		// Execute linter
 		ruleResults, err := newLinter.Execute()
