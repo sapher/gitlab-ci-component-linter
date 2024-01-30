@@ -1,0 +1,10 @@
+spec:
+  inputs:
+    stage_test:
+      default: "test"
+---
+test:
+  image: busybox
+  stage: "$[[ inputs.stage_test ]]"
+  script:
+    - echo "Hello world from complex component!"

@@ -7,10 +7,11 @@
   pass_filenames: false
   args:
     - "."
+    - "--only-failures"
 - id: gitlab-ci-component-linter-docker
   name: GitLab CI Component Linter with docker container
   description: Lint GitLab CI component repository project with docker container
-  entry: ghcr.io/sapher/gitlab-ci-component-linter:latest gitlab-ci-component-linter .
+  entry: ghcr.io/sapher/gitlab-ci-component-linter:latest gitlab-ci-component-linter . --only-failures
   language: docker_image
   always_run: true
   pass_filenames: false

@@ -1,9 +1,14 @@
 package linter
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"io"
+
+	"github.com/fatih/color"
+	"github.com/rodaine/table"
 
 	"gopkg.in/yaml.v3"
 )
@@ -38,6 +43,8 @@ type LinterOutput string
 const (
 	OutputJson        LinterOutput = "json"
 	OutputYaml        LinterOutput = "yaml"
+	OutputNone        LinterOutput = "none"
+	OutputTable       LinterOutput = "table"
 	OutputJunitReport LinterOutput = "junit"
 )
 
@@ -64,11 +71,24 @@ func (l *LinterResults) Output(output LinterOutput) (string, error) {
 		return l.ToJson()
 	case OutputYaml:
 		return l.ToYaml()
+	case OutputNone: // No output
+		return "", nil
+	case OutputTable:
+		return l.ToTable()
 	case OutputJunitReport:
 		return l.ToJunitReport()
 	default:
 		return "", fmt.Errorf("unknown output format: %s", output)
 	}
+}
+
+func (l *LinterResults) HasFailures() bool {
+	for _, result := range *l {
+		if !result.Success {
+			return true
+		}
+	}
+	return false
 }
 
 func (l *LinterResults) ToJson() (string, error) {
@@ -85,6 +105,24 @@ func (l *LinterResults) ToYaml() (string, error) {
 		return "", err
 	}
 	return string(output), nil
+}
+
+func (l *LinterResults) ToTable() (string, error) {
+	var buf bytes.Buffer
+	headerFmt := color.New(color.FgWhite, color.Bold).SprintfFunc()
+	columnFmt := color.New(color.FgWhite).SprintfFunc()
+
+	tbl := table.New("Name", "Message", "Success", "Severity")
+	tbl.WithWriter(io.Writer(&buf))
+	tbl.WithHeaderFormatter(headerFmt)
+	tbl.WithFirstColumnFormatter(columnFmt)
+
+	for _, result := range *l {
+		tbl.AddRow(result.Name, result.Message, result.Success, result.Severity)
+	}
+
+	tbl.Print()
+	return buf.String(), nil
 }
 
 func (l *LinterResults) ToJunitReport() (string, error) {
