@@ -26,8 +26,8 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "sapher/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "sapher/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:latest-amd64"
     build_flag_templates:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
@@ -38,8 +38,8 @@ dockers:
     goos: linux
     goarch: arm64
     image_templates:
-      - "sapher/{{ .ProjectName }}:{{ .Version }}-arm64"
-      - "sapher/{{ .ProjectName }}:latest-arm64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:latest-arm64"
     build_flag_templates:
       - "--platform=linux/arm64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
@@ -47,13 +47,11 @@ dockers:
       - "--label=org.opencontainers.image.created={{ .CommitTimestamp }}"
       - "--label=org.opencontainers.image.revision={{ .Commit }}"
 docker_manifests:
-  - name_template: "sapher/{{ .ProjectName }}:{{ .Version }}"
+  - name_template: "ghcr.io/sapher/{{ .ProjectName }}:{{ .Version }}"
     image_templates:
-      - "sapher/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "sapher/{{ .ProjectName }}:{{ .Version }}-arm64"
-  - name_template: "sapher/{{ .ProjectName }}:latest"
+      - "ghcr.io/sapher/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/sapher/{{ .ProjectName }}:latest"
     image_templates:
-      - "sapher/{{ .ProjectName }}:latest-amd64"
-      - "sapher/{{ .ProjectName }}:latest-arm64"
-changelog:
-  skip: true
+      - "ghcr.io/sapher/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/sapher/{{ .ProjectName }}:latest-arm64"
