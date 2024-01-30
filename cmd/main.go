@@ -18,6 +18,7 @@ Workdir is the directory where the Gitlab CI Component project is located`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Get flags
 		cmdFlags := cmd.Flags()
+		onlyFailures, _ := cmdFlags.GetBool("only-failures")
 		softFail, _ := cmdFlags.GetBool("soft-fail")
 		output, _ := cmdFlags.GetString("output")
 
@@ -60,24 +61,34 @@ Workdir is the directory where the Gitlab CI Component project is located`,
 			os.Exit(1)
 		}
 
-		// Has rules in failure
-		hasErrors := false
-		for _, ruleResult := range ruleResults {
-			if !ruleResult.Success && ruleResult.Severity == linter.SeverityError {
-				hasErrors = true
+		// Filter results
+		if onlyFailures {
+			var filteredResults linter.LinterResults
+			for _, result := range ruleResults {
+				if !result.Success {
+					filteredResults = append(filteredResults, result)
+				}
 			}
+			ruleResults = filteredResults
+		}
+
+		// If no results, everything is fine, exit with 0
+		if len(ruleResults) == 0 {
+			os.Exit(0)
 		}
 
 		// Output results
-		output, err = ruleResults.Output(newLinter.Output)
-		if err != nil {
-			os.Stderr.WriteString(err.Error())
-			os.Exit(1)
+		if newLinter.Output != linter.OutputNone {
+			output, err = ruleResults.Output(newLinter.Output)
+			if err != nil {
+				os.Stderr.WriteString(err.Error())
+				os.Exit(1)
+			}
+			os.Stdout.WriteString(output)
 		}
-		os.Stdout.WriteString(output)
 
-		// Exit with error if has errors and soft-fail is false
-		if hasErrors && !softFail {
+		// Exit with error if has failulres and soft-fail is false
+		if ruleResults.HasFailures() && !softFail {
 			os.Exit(1)
 		}
 	},
@@ -86,8 +97,9 @@ Workdir is the directory where the Gitlab CI Component project is located`,
 func init() {
 	cobra.OnInitialize()
 
-	rootCmd.PersistentFlags().Bool("soft-fail", false, "Wether to fail or not on error")
-	rootCmd.PersistentFlags().String("output", string(linter.OutputJson), "Output format, one of: json, yaml, junit")
+	rootCmd.PersistentFlags().Bool("only-failures", false, "Only display checks that failed")
+	rootCmd.PersistentFlags().BoolP("soft-fail", "s", false, "Run checks and exit with 0 even if errors are found")
+	rootCmd.PersistentFlags().StringP("output", "o", string(linter.OutputTable), "Output format, one of: json, yaml, junit, table, none")
 }
 
 func main() {

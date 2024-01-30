@@ -39,8 +39,9 @@ Usage:
 
 Flags:
   -h, --help            help for gitlab-ci-component-linter
-      --output string   Output format, one of: json, yaml, junit (default "json")
-      --soft-fail       Wether to fail or not on error
+      --only-failures   Only display checks that failed
+  -o, --output string   Output format, one of: json, yaml, junit, table, none (default "table")
+  -s, --soft-fail       Run checks and exit with 0 even if errors are found
 ```
 
 ### Git hook
@@ -52,7 +53,7 @@ You need the executable to be in your `PATH` and then you can add this to your `
 ```yaml
 repos:
   - repo: https://github.com/sapher/gitlab-ci-component-linter
-    rev: v1.0.0
+    rev: v1.0.1
     hooks:
       - id: gitlab-ci-component-linter
 ```
@@ -62,7 +63,7 @@ Or you could use the docker version:
 ```yaml
 repos:
   - repo: https://github.com/sapher/gitlab-ci-component-linter
-    rev: v1.0.0
+    rev: v1.0.1
     hooks:
       - id: gitlab-ci-component-linter-docker
 ```
