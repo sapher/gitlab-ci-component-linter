@@ -8,6 +8,16 @@ import (
 	"testing"
 )
 
+func TestRulesNumber(t *testing.T) {
+	jsonRules, err := ParseJsonRules()
+	if err != nil {
+		t.Fatalf("Failed to parse JSON rules: %v", err)
+	}
+	if len(ruleFuncs) != len(jsonRules) {
+		t.Errorf("Rules number mismatch: %d != %d", len(ruleFuncs), len(jsonRules))
+	}
+}
+
 func TestMissingRootReadmeRule(t *testing.T) {
 	t.Run("No README.md present", func(t *testing.T) {
 		tempDir, err := os.MkdirTemp("", "testdir")

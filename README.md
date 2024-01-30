@@ -6,6 +6,16 @@ Linter for Gitlab CI components. Validate that project follow the [guidelines](h
 
 > This tool name is not that great, if you have a better idea, please open an issue.
 
+## Rules
+
+<!-- BEGIN_HERE -->
+| Rule | Message | Severity |
+|------|---------|----------|
+| missing-root-readme | No README.md file found in root directory | `error` |
+| missing-root-templates-dir | No templates directory found in root directory | `error` |
+| wrong-yaml-file-extension | YAML files must have .yml extension, not .yaml | `error` |
+<!-- END_HERE -->
+
 ## Install
 
 You can either install it using `go install` :
@@ -22,15 +32,15 @@ Or download the binary from the [release page](https://github.com/sapher/gitlab-
 
 ```
 Validate Gitlab CI Component files against set of rules
+Workdir is the directory where the Gitlab CI Component project is located
 
 Usage:
-  gitlab-ci-component-linter [flags]
+  gitlab-ci-component-linter [workdir] [flags]
 
 Flags:
-  -h, --help             help for gitlab-ci-component-linter
-      --output string    Output format, one of: json, yaml, junit (default "json")
-      --soft-fail        Wether to fail or not on error
-      --workdir string   Working directory (default ".")
+  -h, --help            help for gitlab-ci-component-linter
+      --output string   Output format, one of: json, yaml, junit (default "json")
+      --soft-fail       Wether to fail or not on error
 ```
 
 ### Git hook
@@ -40,7 +50,7 @@ You can use this linter as git hook with `pre-commit` to validate your changes b
 ```yaml
 repos:
   - repo: https://github.com/sapher/gitlab-ci-component-linter
-    rev: v1.0.3
+    rev: v1.0.0
     hooks:
       - id: gitlab-ci-component-linter
 ```
@@ -55,14 +65,8 @@ stages:
 
 lint:
   stage: lint
-  image: alpine:latest
+  image: ghrc.io/sapher/gitlab-ci-component-linter:latest
   script:
-    # Download binary
-    - apk add --no-cache wget
-    - wget -q -O gitlab-ci-component-linter.zip  https://github.com/sapher/gitlab-ci-component-linter/releases/download/v1.0.3/gitlab-ci-component-linter_1.0.1_linux_amd64.zip
-    - unzip -n gitlab-ci-component-linter.zip
-    - mv gitlab-ci-component-linter_v1.0.3 /usr/local/bin/gitlab-ci-component-linter
-    # Run linter
     - gitlab-ci-component-linter $CI_PROJECT_DIR --output junit | tee junit.xml
   artifacts:
     reports:

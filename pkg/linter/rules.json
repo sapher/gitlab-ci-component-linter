@@ -1,0 +1,14 @@
+{
+  "missing-root-readme": {
+    "severity": "error",
+    "message": "No README.md file found in root directory"
+  },
+  "missing-root-templates-dir": {
+    "severity": "error",
+    "message": "No templates directory found in root directory"
+  },
+  "wrong-yaml-file-extension": {
+    "severity": "error",
+    "message": "YAML files must have .yml extension, not .yaml"
+  }
+}

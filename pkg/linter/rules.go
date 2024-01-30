@@ -1,11 +1,23 @@
 package linter
 
 import (
+	_ "embed"
+	"encoding/json"
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
 )
+
+type JsonRule struct {
+	Name     string `json:"name"`
+	Severity string `json:"severity"`
+	Message  string `json:"message"`
+}
+
+//go:embed rules.json
+var rawJsonRules string
 
 type LinterRuleFunc func(linter *Linter) (LinterResult, error)
 
@@ -13,6 +25,28 @@ var ruleFuncs = []LinterRuleFunc{
 	MissingRootReadmeRule,
 	MissingRootTemplatesDirRule,
 	WrongYamlFileExtensionRule,
+}
+
+func ParseJsonRules() (map[string]JsonRule, error) {
+	var jsonRules map[string]JsonRule
+	// Unmarshal JSON rules
+	if err := json.Unmarshal([]byte(rawJsonRules), &jsonRules); err != nil {
+		return nil, err
+	}
+	return jsonRules, nil
+}
+
+func GetJsonRule(ruleName string) (JsonRule, error) {
+	// Unmarshal JSON rules
+	jsonRules, err := ParseJsonRules()
+	if err != nil {
+		return JsonRule{}, err
+	}
+	// Check if rule exists
+	if rule, ok := jsonRules[ruleName]; ok {
+		return rule, nil
+	}
+	return JsonRule{}, fmt.Errorf("rule not found: %s", ruleName)
 }
 
 func MissingRootReadmeRule(linter *Linter) (LinterResult, error) {

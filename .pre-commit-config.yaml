@@ -9,3 +9,23 @@ repos:
     rev: v1.55.0
     hooks:
       - id: golangci-lint
+        name: Lint Golang code
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.27.3
+    hooks:
+      - id: check-jsonschema
+        name: Check JSON rules
+        files: ^(pkg/linter/rules.json)
+        args:
+          - --schemafile
+          - pkg/linter/rules.schema.json
+  - repo: local
+    hooks:
+      - id: generate-rules-table
+        name: Generate rules table
+        entry: ./hooks/generate_rules_table.sh
+        language: script
+        files: ^(pkg/linter/rules.json|README.md)
+        args:
+          - "pkg/linter/rules.json"
+          - "README.md"
